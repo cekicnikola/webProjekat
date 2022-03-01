@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace backEnd.Models
 {
     public class Pivnica
@@ -5,8 +9,12 @@ namespace backEnd.Models
         [Key]
         public int ID { get; set; }
         [Required]
-        public string Naziv { get; set; }
-        
-        
+        [MaxLength(50)]
+        public string Naziv { get; set; } 
+        public int BrojStolova { get; set; }
+       
+        public Meni Meni { get; set; }
+        public List<Sto> Stolovi { get; set; }
+
     }
 }
