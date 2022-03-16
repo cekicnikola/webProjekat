@@ -3,21 +3,38 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backEnd.Models;
 
 namespace backEnd.Migrations
 {
     [DbContext(typeof(PivnicaContext))]
-    partial class PivnicaContextModelSnapshot : ModelSnapshot
+    [Migration("20220308214824_V4")]
+    partial class V4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("NarudzbinaPromocija", b =>
+                {
+                    b.Property<int>("NarudzbineID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromocijeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("NarudzbineID", "PromocijeID");
+
+                    b.HasIndex("PromocijeID");
+
+                    b.ToTable("NarudzbinaPromocija");
+                });
 
             modelBuilder.Entity("backEnd.Models.Meni", b =>
                 {
@@ -26,20 +43,11 @@ namespace backEnd.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("MinKolicinaHrane")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MinKolicinaPica")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OpisPromocije")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PivnicaID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Popust")
-                        .HasColumnType("int");
+                    b.Property<string>("Promocije")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -70,9 +78,6 @@ namespace backEnd.Migrations
 
                     b.Property<int?>("StoID")
                         .HasColumnType("int");
-
-                    b.Property<float>("ZaNaplatu")
-                        .HasColumnType("real");
 
                     b.HasKey("ID");
 
@@ -131,6 +136,30 @@ namespace backEnd.Migrations
                     b.ToTable("PivaHrana");
                 });
 
+            modelBuilder.Entity("backEnd.Models.Promocija", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Ime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MinKolicinaHrane")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinKolicinaPica")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Popust")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Promocije");
+                });
+
             modelBuilder.Entity("backEnd.Models.Sto", b =>
                 {
                     b.Property<int>("ID")
@@ -144,14 +173,26 @@ namespace backEnd.Migrations
                     b.Property<int?>("PivnicaID")
                         .HasColumnType("int");
 
-                    b.Property<float>("Racun")
-                        .HasColumnType("real");
-
                     b.HasKey("ID");
 
                     b.HasIndex("PivnicaID");
 
                     b.ToTable("Stolovi");
+                });
+
+            modelBuilder.Entity("NarudzbinaPromocija", b =>
+                {
+                    b.HasOne("backEnd.Models.Narudzbina", null)
+                        .WithMany()
+                        .HasForeignKey("NarudzbineID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backEnd.Models.Promocija", null)
+                        .WithMany()
+                        .HasForeignKey("PromocijeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("backEnd.Models.Meni", b =>

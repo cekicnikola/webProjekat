@@ -9,7 +9,7 @@ namespace backEnd.Models
         public DbSet<PivoHrana> PivaHrana { get; set; }
         public DbSet<Meni> Meni { get; set; }
         public DbSet <Narudzbina> Narudzbine { get; set; }
-        public DbSet<Promocija> Promocije { get; set; }
+       
 
 
         public PivnicaContext(DbContextOptions options) : base(options)

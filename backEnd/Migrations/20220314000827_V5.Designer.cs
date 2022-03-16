@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backEnd.Models;
 
 namespace backEnd.Migrations
 {
     [DbContext(typeof(PivnicaContext))]
-    partial class PivnicaContextModelSnapshot : ModelSnapshot
+    [Migration("20220314000827_V5")]
+    partial class V5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,11 +70,11 @@ namespace backEnd.Migrations
                     b.Property<int?>("PivoHranaID")
                         .HasColumnType("int");
 
+                    b.Property<float>("Racun")
+                        .HasColumnType("real");
+
                     b.Property<int?>("StoID")
                         .HasColumnType("int");
-
-                    b.Property<float>("ZaNaplatu")
-                        .HasColumnType("real");
 
                     b.HasKey("ID");
 
@@ -143,9 +145,6 @@ namespace backEnd.Migrations
 
                     b.Property<int?>("PivnicaID")
                         .HasColumnType("int");
-
-                    b.Property<float>("Racun")
-                        .HasColumnType("real");
 
                     b.HasKey("ID");
 

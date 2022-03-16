@@ -9,9 +9,11 @@ namespace backEnd.Models
     {
         [Key]
         public int ID { get; set; }
-        public string Promocije { get; set; }
-        
-        
+       
+        public string OpisPromocije { get; set; }
+        public int MinKolicinaPica { get; set; }
+        public int MinKolicinaHrane  { get; set; }
+        public int Popust { get; set; }
         public List<PivoHrana> Stavke { get; set; }
     
         public int PivnicaID { get; set; }
