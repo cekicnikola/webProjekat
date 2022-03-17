@@ -31,7 +31,8 @@ namespace backEnd.Models
                    ID=p.ID,
                    Naziv=p.Naziv,
                    Cena=p.Cena,
-                   PiceIliHrana=p.PiceIliHrana
+                   PiceIliHrana=p.PiceIliHrana,
+                   Narudzbine=p.Narudzbine
                    //,Meni=p.Meni
 
                }).ToListAsync());

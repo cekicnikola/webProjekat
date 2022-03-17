@@ -10,7 +10,7 @@ using backEnd.Models;
 namespace backEnd.Migrations
 {
     [DbContext(typeof(PivnicaContext))]
-    [Migration("20220301221402_V1")]
+    [Migration("20220317172204_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,10 +28,25 @@ namespace backEnd.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Promocije")
+                    b.Property<int>("MinKolicinaHrane")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinKolicinaPica")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OpisPromocije")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PivnicaID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Popust")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("PivnicaID")
+                        .IsUnique();
 
                     b.ToTable("Meni");
                 });
@@ -58,6 +73,9 @@ namespace backEnd.Migrations
                     b.Property<int?>("StoID")
                         .HasColumnType("int");
 
+                    b.Property<float>("ZaNaplatu")
+                        .HasColumnType("real");
+
                     b.HasKey("ID");
 
                     b.HasIndex("PivoHranaID");
@@ -77,17 +95,12 @@ namespace backEnd.Migrations
                     b.Property<int>("BrojStolova")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MeniID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Naziv")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("MeniID");
 
                     b.ToTable("Pivnice");
                 });
@@ -140,6 +153,17 @@ namespace backEnd.Migrations
                     b.ToTable("Stolovi");
                 });
 
+            modelBuilder.Entity("backEnd.Models.Meni", b =>
+                {
+                    b.HasOne("backEnd.Models.Pivnica", "Pivnica")
+                        .WithOne("Meni")
+                        .HasForeignKey("backEnd.Models.Meni", "PivnicaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pivnica");
+                });
+
             modelBuilder.Entity("backEnd.Models.Narudzbina", b =>
                 {
                     b.HasOne("backEnd.Models.PivoHrana", "PivoHrana")
@@ -153,15 +177,6 @@ namespace backEnd.Migrations
                     b.Navigation("PivoHrana");
 
                     b.Navigation("Sto");
-                });
-
-            modelBuilder.Entity("backEnd.Models.Pivnica", b =>
-                {
-                    b.HasOne("backEnd.Models.Meni", "Meni")
-                        .WithMany()
-                        .HasForeignKey("MeniID");
-
-                    b.Navigation("Meni");
                 });
 
             modelBuilder.Entity("backEnd.Models.PivoHrana", b =>
@@ -189,6 +204,8 @@ namespace backEnd.Migrations
 
             modelBuilder.Entity("backEnd.Models.Pivnica", b =>
                 {
+                    b.Navigation("Meni");
+
                     b.Navigation("Stolovi");
                 });
 

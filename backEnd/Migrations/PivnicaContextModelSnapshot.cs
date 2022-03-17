@@ -144,9 +144,6 @@ namespace backEnd.Migrations
                     b.Property<int?>("PivnicaID")
                         .HasColumnType("int");
 
-                    b.Property<float>("Racun")
-                        .HasColumnType("real");
-
                     b.HasKey("ID");
 
                     b.HasIndex("PivnicaID");

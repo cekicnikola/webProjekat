@@ -10,10 +10,11 @@ namespace backEnd.Models
         public int ID { get; set; }
         [Required]
         public int BrojStola { get; set; }
-        public float Racun { get; set; }
+       
         
         public List<Narudzbina> Narudzbine { get; set; }
         
+        [JsonIgnore]
         public Pivnica Pivnica { get; set; }
 
     }

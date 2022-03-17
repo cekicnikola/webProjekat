@@ -125,7 +125,7 @@ namespace backEnd.Controllers
               return BadRequest(e.Message);
           }
        }
-       [Route("DodajSto/{broj}")]
+       [Route("DodajStoUzPomocBroja/{broj}")]
        [HttpPost]
        public async Task<ActionResult> DodajSto(int broj)
        {

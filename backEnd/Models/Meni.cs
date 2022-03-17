@@ -18,6 +18,7 @@ namespace backEnd.Models
     
         public int PivnicaID { get; set; }
         [ForeignKey("PivnicaID")]
+        [JsonIgnore]
         public Pivnica Pivnica { get; set; }   
 
         

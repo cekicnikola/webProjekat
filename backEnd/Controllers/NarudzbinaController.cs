@@ -19,9 +19,9 @@ namespace backEnd.Models
             Context=context;
         }
 
-        [Route("Naruci/{stoID}/{pivoHranaID}]")]
+        [Route("Naruci/{stoID}/{pivoHranaID}")]
         [HttpPost]
-        public async Task<ActionResult> Naruci(int stoID, int pivoHranaID, [FromBody] Narudzbina narudzbina)
+        public async Task<ActionResult> NaruciPivoHranu(int stoID, int pivoHranaID, [FromBody] Narudzbina narudzbina)
         {
             if(stoID <= 0 || pivoHranaID <= 0 )
             {
@@ -120,8 +120,8 @@ namespace backEnd.Models
 
                 var meni=spoj.Pivnica.Meni;
 
-                var postojiPopust=narudzbine.Where(p=>p.KolicinaHrane >= meni.MinKolicinaHrane
-                 || p.KolicinaPiva >= meni.MinKolicinaPica).FirstOrDefault();
+                var kolicinaPica=narudzbine.Sum(p=>p.KolicinaPiva);
+                 var kolicinaHrane=narudzbine.Sum(p=>p.KolicinaHrane);
 
                 var racun=0.0f;
                  foreach(Narudzbina stavka in narudzbine)
@@ -129,10 +129,10 @@ namespace backEnd.Models
                      racun+=stavka.ZaNaplatu;
                  }
 
-                 if(postojiPopust != null)
+                 if(kolicinaPica > meni.MinKolicinaPica || kolicinaHrane > meni.MinKolicinaHrane)
                  {
                      racun=racun - racun*meni.Popust;
-                     return Ok(racun); //dodace new kako bih ubacio i rac i poruku u jednom obj
+                     return Ok(racun); 
                  }
                  else
                  {
@@ -166,11 +166,17 @@ namespace backEnd.Models
                 
 
                 var meni=spoj.Pivnica.Meni;
+                if(meni == null)
+                {
+                    return BadRequest("Meni nije pronadjen");
+                }
+                
 
-                var postojiPopust=narudzbine.Where(p=>p.KolicinaHrane >= meni.MinKolicinaHrane
-                 || p.KolicinaPiva >= meni.MinKolicinaPica).FirstOrDefault();
-
-                var racun=0.0f;
+                /*var postojiPopust=narudzbine.Where(p=>p.KolicinaHrane >= meni.MinKolicinaHrane
+                 || p.KolicinaPiva >= meni.MinKolicinaPica).FirstOrDefault();*/
+                 var kolicinaPica=narudzbine.Sum(p=>p.KolicinaPiva);
+                 var kolicinaHrane=narudzbine.Sum(p=>p.KolicinaHrane);
+                 var racun=0.0f;
                  
 
                  foreach(Narudzbina stavka in narudzbine)
@@ -181,15 +187,15 @@ namespace backEnd.Models
                   await Context.SaveChangesAsync();
 
 
-                 if(postojiPopust != null)
+                 if(kolicinaPica >= meni.MinKolicinaPica || kolicinaHrane >= meni.MinKolicinaHrane)
                  {
-                     racun=racun - racun*meni.Popust;
+                      racun -= racun * (meni.Popust / 100.0f);
 
-                     return Ok("Racun je sa popustom od {meni.Popust*100}% i iznosi: {racun}");
+                     return Ok($"Racun je sa popustom od {meni.Popust}% i iznosi: {racun}");
                  }
                  else
                  {
-                     return Ok("Racun je bez popusta i iznosi: {racun}");
+                     return Ok($"Racun je bez popusta i iznosi: {racun}");
                  }
             
             }

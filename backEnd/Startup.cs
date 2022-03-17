@@ -34,6 +34,31 @@ namespace backEnd
             options.UseSqlServer(Configuration.GetConnectionString("PivnicaCS"));    
 
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CORS", builder =>
+                {
+                    builder.WithOrigins(new string[]
+                    {
+                        "http://localhost:8080",
+                        "https://localhost:8080",
+                        "http://127.0.0.1:8080",
+                        "https://127.0.0.1:8080",
+                        "http://127.0.0.1:5000",
+                        "http://localhost:5000",
+                        "https://127.0.0.1:5001",
+                        "https://localhost:5001",
+                        "http://127.0.0.1:5500",
+                        "http://localhost:5500",
+                        "https://127.0.0.1:5500",
+                        "https://localhost:5500"
+                    })
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+           
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -54,6 +79,8 @@ namespace backEnd
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("CORS");
 
             app.UseAuthorization();
 
