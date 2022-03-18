@@ -18,14 +18,14 @@ namespace backEnd.Models
         {
             Context=context;
         }
-        [Route("Preuzmi pivnice")]
+        [Route("PreuzmiPivnice")]
         [HttpGet]
         public async Task<ActionResult> Vrati()
         {
             try
             {
             return Ok( await Context.Pivnice.Include(p=>p.Stolovi)
-            .Include(p=>p.Meni).Select(p=>p).ToListAsync());
+            .Include(p=>p.Meni).ThenInclude(p=>p.Stavke).Select(p=>p).ToListAsync());
             }
             catch(Exception e )
             {
@@ -33,5 +33,33 @@ namespace backEnd.Models
             }
 
         }
+        [Route("ObrisiPivnicu/{id}")]
+        [HttpDelete]
+        public async Task<ActionResult> Obrisi(int id)
+        {
+            try
+            {
+                var pivnica=await Context.Pivnice.FindAsync(id);
+                if(pivnica != null)
+                {
+                    Context.Pivnice.Remove(pivnica);
+                    await Context.SaveChangesAsync();
+                    return Ok("Pivnica uspesno izbrisana");
+                }
+                else
+                {
+                    return BadRequest("Pivnica nije pronadjena");
+                }
+            }
+            catch(Exception e )
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+
     }
+    
+    
 }

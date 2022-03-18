@@ -137,7 +137,7 @@ namespace backEnd.Models
                      pivo.Meni=meni;
                      Context.PivaHrana.Add(pivo);
                      await Context.SaveChangesAsync();
-                     return Ok($"Pivo sa ID-jem: {pivo.ID} je uspesno dodato.");
+                     return Ok(pivo.ID);
                  }
              }
              else
@@ -259,6 +259,60 @@ namespace backEnd.Models
              return BadRequest(e.Message);
          }
      }
+     [Route("IzmeniPivo/{id}")]
+     [HttpPut]
+     public async Task<ActionResult> IzmeniPivo(int id, [FromBody] PivoHrana pivo)
+     {
+         if(id <= 0)
+           {
+               return BadRequest("Pogresan ID.");
+           }
+        
+
+         if(string.IsNullOrWhiteSpace(pivo.Naziv) || pivo.Naziv.Length > 50 )
+         {
+             return BadRequest("Nepravilan unos naziva piva.");
+         }
+         
+         if(pivo.Cena < 10.0f || pivo.Cena > 10000.0f)
+         {
+             return BadRequest("Nedozvoljena vrednost cene piva");
+         }
+         
+         try
+         {
+              var pivoHrana= await Context.PivaHrana.FindAsync(id);
+             var postojecaStavka=await Context.PivaHrana
+             .Where(p=>p.Naziv==pivo.Naziv)
+             .FirstOrDefaultAsync();
+             if(pivoHrana != null)
+             {
+                 if(postojecaStavka == null)
+                 {
+                     pivoHrana.Naziv=pivo.Naziv;
+                     pivoHrana.Cena=pivo.Cena;
+                 Context.PivaHrana.Update(pivoHrana);
+
+                 await Context.SaveChangesAsync();
+                 return Ok($"Pivo  je uspesno izmenjeno.");
+                 }
+                 else
+                 {
+                     return BadRequest("Zeljeni Naziv vec postoji!");
+                 }
+             }
+             else
+             {
+                 return BadRequest("Pivo a nije pronadjeni!");
+             }
+             
+         }
+         catch(Exception e )
+         {
+             return BadRequest(e.Message);
+         }
+     }
+
      [Route("IzbrisiPivoHranu/{id}")]
       [HttpDelete]
       public async Task<ActionResult> Izbrisi(int id)
@@ -282,13 +336,13 @@ namespace backEnd.Models
               else 
               if( pivoHrana.Narudzbine.Count() != 0)
               {
-                  return BadRequest("Sto se ne moze obrisati, jer sadrzi narudzbine!");
+                  return BadRequest("Pivo ili hrana se ne moze obrisati, jer sadrzi narudzbine!");
               }
               else
               {
                    Context.PivaHrana.Remove(pivoHrana);
                    await Context.SaveChangesAsync();
-                   return Ok("Sto je uspesno obrisan.");
+                   return Ok("Pivo ili hrana su uspesno obrisani.");
 
               }
           }
