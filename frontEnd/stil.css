@@ -1,0 +1,83 @@
+.pivnica{
+    display: flex;
+}
+.naslov{
+    font-weight: bolder;
+    align-self: center;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+.meni{
+    display: flex;
+    /* flex-grow: 2;
+    flex-shrink: 2;
+    flex-basis: auto; */
+    flex-direction: column;
+
+    min-width: 200px;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+
+    border: 1px solid lightblue;
+    margin: 5px;
+    padding: 15px;
+}
+.salaStolovi{
+    display: flex;
+    flex: 3 2 auto;
+    justify-content: left;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    border: 2px solid rgb(56, 12, 12);
+    margin: 5px;
+    padding: 10px;
+
+    background-color: rgb(236, 219, 219);
+}
+.forma{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+}
+
+.stavkeForma{
+    display: flex;
+
+}
+.dugmadMeni{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.dugme{
+    display: flex;
+    flex: 0 1 auto;
+
+    width: min-content;
+    height: min-content;
+    /* max-height: fit-content; */
+    
+
+    margin: 5px;
+    font-weight: bold;
+    font-size: 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.polje{
+    display: flex;
+    flex: 0 1 auto;
+
+    max-height: max-content;
+}
+
+label{
+    margin: 5px;
+}
