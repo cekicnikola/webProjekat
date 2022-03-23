@@ -215,12 +215,12 @@ namespace backEnd.Models
 
          if(string.IsNullOrWhiteSpace(pivo.Naziv) || pivo.Naziv.Length > 50 )
          {
-             return BadRequest("Nepravilan unos naziva piva.");
+             return BadRequest("Nepravilan unos naziva piva ili hrane.");
          }
          
          if(pivo.Cena < 10.0f || pivo.Cena > 10000.0f)
          {
-             return BadRequest("Nedozvoljena vrednost cene piva");
+             return BadRequest("Nedozvoljena vrednost cene piva ili hrane");
          }
          
          try
@@ -247,7 +247,7 @@ namespace backEnd.Models
              }
              else
              {
-                 return BadRequest("Pivo  nije pronadjeno!");
+                 return BadRequest("Pivo ili hrana nisu pronadjeni!");
              }
              
          }
