@@ -1,10 +1,12 @@
 import { Pice } from "./pice.js";
+import { Pivnica } from "./pivnica.js";
 
 export class Meni{
 
     constructor(k, m){
 
         this.id = m.id;
+        this.opisPromocije=m.opisPromocije;
 
         this.kontejner = null;
 
@@ -13,7 +15,7 @@ export class Meni{
         this.stavke = [];
 
         m.stavke.forEach(pice => {
-            const pivoHrana = new Pice(pice.naziv, pice.cena, pice.id); 
+            const pivoHrana = new Pice(pice.naziv, pice.cena, pice.id, pice.piceIliHrana); 
             this.stavke.push(pivoHrana);
         });
     }
@@ -22,15 +24,25 @@ export class Meni{
 
         let klasa = ".nazivPica" + this.id;
         let naz = document.querySelector(klasa);
+        
 
         klasa = ".cenaPica" + this.id;
         let cena = document.querySelector(klasa);
+
+        klasa=".pivoHranaSel" + this.id;
+        let selElement= document.querySelector(klasa);
+        var pivoHrana=parseInt(selElement.value); 
+        
+        pivoHrana=!!pivoHrana; //konverzija u bolean
+        console.log(pivoHrana);
+        
+
 
         let l = document.querySelector(".stavkeSelect"+this.id);
 
         let index = this.stavke.length + 1;
 
-        fetch("https://localhost:5001/PivoHrana/DodajPivo/" + this.id, {
+        fetch("https://localhost:5001/PivoHrana/DodajPivoHranu/" + this.id, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -38,7 +50,7 @@ export class Meni{
                 body: JSON.stringify({
                     "naziv": naz.value,
                     "cena": cena.value,
-                    "piceIlihrana":true
+                    "piceIlihrana": pivoHrana
                 })
             }).then(p => {
                 if (p.ok) {
@@ -61,18 +73,32 @@ export class Meni{
                     p.json().then(p => {
                         let s = new Pice(naz.value,cena.value, p);
                         this.stavke.push(s);
+                        console.log(this.pivnicaRef);
+                        this.pivnicaRef.dodajStavkuSto();
                         
                     }); 
                 }
-                else if (p.status == 406) {
-                    // server vraca kod 406 ako parametri pica nisu regularni
-                    alert("Cena pica ne sme da bude negativna, i pice treba da ima naziv!");
-                }
+                
                 else {
-                    alert("Greška prilikom upisa.");
+                        
+                    p.json().then(q=>{
+
+                            
+
+                            if(q.errors.Cena !=null)
+                                alert(q.errors.Cena);
+                            else if(q.errors.Naziv !=null)
+                                alert(q.errors.Naziv);
+                            
+                       
+                                
+                    });
+                    
                 }
             }).catch(p => {
-                alert("Greška prilikom upisa.");
+                
+               // p.json().then(q=>console.log(q.errors));
+                alert("Greska prilikom upisa");
         });
     }
 
@@ -96,6 +122,7 @@ export class Meni{
 
                     lista.removeChild(lista.options[index]);
                     this.stavke = this.stavke.filter(s=>s.id!==stavka.id);
+                    this.pivnicaRef.ukloniStavkuSto(index);
 
                    
                 }
@@ -115,7 +142,7 @@ export class Meni{
 
         let s = (this.stavke[index]);
 
-        fetch("https://localhost:5001/PivoHrana/IzmeniPivo/" + s.id, {
+        fetch("https://localhost:5001/PivoHrana/IzmeniPivoHranu/" + s.id, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -130,6 +157,8 @@ export class Meni{
                     s.Naziv = lista.options[index].name = naz.value;
                     s.Cena = lista.options[index].value = cena.value;
                     lista.options[index].innerHTML = naz.value;
+
+                    this.pivnicaRef.azurirajStavkuSto(index, stavka);
 
                     
                 }
@@ -173,14 +202,18 @@ export class Meni{
         forma.appendChild(sel);
 
         let stavka;
+        
 
         this.stavke.forEach( pice => {
             stavka = document.createElement("option");
             stavka.classList.add("stavkaMeni");
-
             stavka.value = pice.cena;
             stavka.name = pice.naziv;
-            stavka.innerHTML = pice.naziv;
+            stavka.dataset.vrednost=pice.piceIliHrana;
+            stavka.innerHTML =  pice.naziv;
+        
+        
+           
             sel.add(stavka);
         });
 
@@ -192,6 +225,10 @@ export class Meni{
                 naz.value = sel.options[i].name;
                 naz = document.querySelector(".cenaPica"+this.id);
                 naz.value = sel.options[i].value;
+            
+            
+                
+                
             }
         }
 
@@ -225,6 +262,44 @@ export class Meni{
         id = "cenaPica" + this.id; // za lociranje elementa na stranici
         inp.classList.add(id);
         p.appendChild(inp);
+
+       /* let radioKontejner=document.createElement("div");
+        radioKontejner.classList.add("radioKontejner");
+        forma.appendChild(radioKontejner);*/
+        
+        p = document.createElement("label");
+        p.name = "pivoHranaLabel";
+        p.innerHTML = "Pivo ili Hrana: ";
+        forma.appendChild(p);
+        
+        
+
+        let izbor = document.createElement("select");
+        izbor.classList.add("polje");
+        izbor.name = "pivoHranaSel";
+        id = "pivoHranaSel" + this.id; // za lociranje elementa na stranici
+        izbor.classList.add(id);
+        p.appendChild(izbor);
+
+        p = document.createElement("option");
+        id = "Pivo" + this.id;
+        p.classList.add(id);
+        p.name = "pivo";
+        p.innerHTML = "Pivo";
+        p.value=1;
+        izbor.appendChild(p);
+
+        p = document.createElement("option");
+        p.name = "hrana";
+        id = "Hrana" + this.id;
+        p.classList.add(id);
+        p.innerHTML = "Hrana";
+        p.value=0;
+        izbor.appendChild(p);
+
+
+
+       
      
 
         /* Dugmad za dodavanje, izmenu i brisanje stavki iz menija */
@@ -256,6 +331,15 @@ export class Meni{
         btnObrisi.type = "button";
         btnObrisi.value = "Obrisi stavku";
         forma.appendChild(btnObrisi);
+
+        let akcija=document.createElement("div");
+        akcija.classList.add("akcijaDiv");
+        forma.appendChild(akcija);
+
+        let akcijaParagraf=document.createElement("p");
+        akcijaParagraf.classList.add("akcijaParagraf");
+        akcijaParagraf.innerHTML=this.opisPromocije;
+        akcija.appendChild(akcijaParagraf);
 
         btnObrisi.onclick=(event) => {
             this.obrisiStavku();

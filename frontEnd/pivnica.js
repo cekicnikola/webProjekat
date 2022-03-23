@@ -11,7 +11,7 @@ export class Pivnica{
         this.meni=new Meni(this, p.meni);
         this.stolovi=[];
         for (let i=0;i<this.brojStolova;i++){
-            this.stolovi.push(new Sto(p.stolovi[i].id, i, this.id));
+            this.stolovi.push(new Sto(p.stolovi[i].id, i, this.meni, this.id));
         }
         
     }
@@ -27,16 +27,30 @@ export class Pivnica{
         this.meni.prikaziMeni(this.kontejner);
         const sala=document.createElement("div");
         sala.classList.add("salaStolovi");
+        sala.style.backgroundImage="url('projekat2.jpg')";
         this.kontejner.appendChild(sala);
+        
 
-        /*this.meni.prikaziMeni(this.kontejner);
-        const sala = document.createElement("div");
-        sala.classList.add("salaStolovi");
-        this.kontejner.appendChild(sala);*/
+        
 
-        /*this.stolovi.forEach((sto)=>{
+        this.stolovi.forEach((sto)=>{
             sto.crtajSto(sala);
-        });*/
+        });
 
+    }
+    dodajStavkuSto(){
+        this.stolovi.forEach((sto) => {
+            sto.addStavkaMeniSto();
+        });
+    }
+    ukloniStavkuSto(index){
+        this.stolovi.forEach((sto) => {
+            sto.removeStavkaMeniSto(index);
+        });
+    }
+    azurirajStavkuSto(index, stavka){
+        this.stolovi.forEach((sto) => {
+            sto.updateStavkaMeniSto(index, stavka);
+        });
     }
 }
