@@ -109,6 +109,8 @@ namespace backEnd.Controllers
                 var pivnica=await Context.Pivnice.FindAsync(pivnicaID);
                 if(pivnica !=null)
                 {
+                 
+                 pivnica.BrojStolova++;
                  sto.Pivnica=pivnica;   
                  Context.Stolovi.Add(sto);
                 await Context.SaveChangesAsync();

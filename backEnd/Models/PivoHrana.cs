@@ -9,7 +9,7 @@ namespace backEnd.Models
         [Key]
         public int ID { get; set; }
        [Required(ErrorMessage ="Nepravilan unos Naziva!")]
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessage="Naziv mora imati manje od 50 karaktera!")]
         public string Naziv { get; set; }
         [Required(ErrorMessage ="Nedozvoljena vrednost cene")]
         [Range(10, 10000, ErrorMessage ="Nedozvoljena vrednost, {0} mora biti izmedju {1} i {2}!")]

@@ -5,6 +5,7 @@ using backEnd.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace backEnd.Models
 {
@@ -17,6 +18,23 @@ namespace backEnd.Models
         public NarudzbinaController(PivnicaContext context)
         {
             Context=context;
+        }
+        [Route("PregledNarudzbina/{stoID}")]
+        [HttpGet]
+        public async Task<List<Narudzbina>>Preuzmi(int stoID)
+        {
+        
+               // var sto=await Context.Stolovi.FindAsync(stoID);
+                
+                
+                    var narudzbine=await Context.Narudzbine.Where(p=>p.Sto.ID==stoID)
+                    .Include(p=>p.PivoHrana)
+                    .ToListAsync();
+                    
+                    return  (narudzbine);
+                
+                
+           
         }
 
         [Route("Naruci/{stoID}/{pivoHranaID}")]
@@ -57,7 +75,7 @@ namespace backEnd.Models
                     
                     Context.Narudzbine.Add(narudzbina);
                     await Context.SaveChangesAsync();
-                    return Ok($"Uspesno ste narucili, ID narudzbine: {narudzbina.ID} ");
+                    return Ok($"Uspesno ste narucil ");
                     //vrati ID samo ukoliko je potrebno
                 }
                 else
@@ -104,49 +122,7 @@ namespace backEnd.Models
             }
         }
 
-        [Route("Racun/{stoID}")]
-        [HttpGet]
-        public async Task<ActionResult> KonacanRacun(int stoID)
-        {
-            try
-            {
-                var narudzbine=await Context.Narudzbine.Where(p=>p.Sto.ID==stoID).ToListAsync();
-                var spoj=await Context.Stolovi.Where(p=>p.ID==stoID).Include(p=>p.Pivnica)
-                .ThenInclude(p=>p.Meni).FirstOrDefaultAsync();
-                if(narudzbine == null)
-                {
-                    return BadRequest("Sto nema narudzbine. Racun je 0.");
-                }
-
-                var meni=spoj.Pivnica.Meni;
-
-                var kolicinaPica=narudzbine.Sum(p=>p.KolicinaPiva);
-                 var kolicinaHrane=narudzbine.Sum(p=>p.KolicinaHrane);
-
-                var racun=0.0f;
-                 foreach(Narudzbina stavka in narudzbine)
-                 {
-                     racun+=stavka.ZaNaplatu;
-                 }
-
-                 if(kolicinaPica > meni.MinKolicinaPica || kolicinaHrane > meni.MinKolicinaHrane)
-                 {
-                     racun=racun - racun*meni.Popust;
-                     return Ok(racun); 
-                 }
-                 else
-                 {
-                     return Ok(racun);
-                 }
-
-
-                 
-            }
-            catch(Exception e )
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        
         [Route("Naplati/{stoID}")]
         [HttpDelete]
         public async Task<ActionResult> NaplatiRacun(int stoID)
