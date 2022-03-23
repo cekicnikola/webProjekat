@@ -332,14 +332,14 @@ export class Meni{
         btnObrisi.value = "Obrisi stavku";
         forma.appendChild(btnObrisi);
 
-        let akcija=document.createElement("div");
+        /*let akcija=document.createElement("div");
         akcija.classList.add("akcijaDiv");
-        forma.appendChild(akcija);
+        forma.appendChild(akcija);*/
 
         let akcijaParagraf=document.createElement("p");
         akcijaParagraf.classList.add("akcijaParagraf");
         akcijaParagraf.innerHTML=this.opisPromocije;
-        akcija.appendChild(akcijaParagraf);
+        forma.appendChild(akcijaParagraf);
 
         btnObrisi.onclick=(event) => {
             this.obrisiStavku();

@@ -34,11 +34,12 @@ body{
     justify-content: left;
     flex-direction: row;
     flex-wrap: wrap;
+   
     
     border: 2px solid rgb(65, 63, 63);
     box-shadow: 10px 10px 8px #888888;
     margin: 5px;
-    padding: 0px;
+    padding: 10px;
 
     background-color: rgb(32, 31, 31);
 }
@@ -87,7 +88,7 @@ label{
     margin: 5px;
 }
 img{
-    display:flex;
+    
     height: 100%;
     width: 100%;
     margin:0%;
@@ -133,4 +134,9 @@ img{
     font-size:10px;
     color:rgb(19, 168, 206);
 
+    
+}
+.divKolicine{
+    display:flex;
+    flex-direction: column;
 }

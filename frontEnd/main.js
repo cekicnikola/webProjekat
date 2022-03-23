@@ -21,7 +21,7 @@ fetch("https://localhost:5001/Pivnica/PreuzmiPivnice")
 .then(p => {
                 p.json().then(data => {
                     data.forEach(p => {
-                        console.log(p);
+                        
                         pivnica= new Pivnica(p);
                         pivnica.crtajPivnicu(document.body);
                     });

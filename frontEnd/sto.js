@@ -21,13 +21,13 @@ export class Sto{
 
         let p=this.pica.find(p=>p.naziv==pice.naziv);
         if(p != undefined){
-            console.log("uso sam ovde");
+            
             let t = document.querySelector(".Racun" + this.oznaka + "-" + this.brojStola);
             let str=t.innerHTML;
             let temp;
             
             temp=str.replace(pice.naziv + " - " + pice.cena + "  x  " + p.Kolicina +  "<br>","");
-            console.log(temp);
+            
 
             p.Kolicina=p.Kolicina + kolicina;
            
@@ -36,7 +36,7 @@ export class Sto{
             
         //dodaj kolicinu i izmeni ovu fju
         pice.Kolicina=kolicina;
-        console.log(pice.Kolicina);
+        
         this.pica.push(pice);
         let t = document.querySelector(".Racun" + this.oznaka + "-" + this.brojStola);
         t.innerHTML += pice.naziv + " - " + pice.cena + "  x  " + pice.Kolicina +  "<br>"; 
@@ -85,16 +85,20 @@ export class Sto{
         sel.classList.add(id);
         forma.appendChild(sel);
 
+        const divKol=document.createElement("div");
+        divKol.classList.add("divKolicine");
+        forma.appendChild(divKol);
+
         const kolicinaLab=document.createElement("label");
         kolicinaLab.classList.add("kolicinaLabela");
         kolicinaLab.innerHTML="Kolicina:";
-        forma.appendChild(kolicinaLab);
+        divKol.appendChild(kolicinaLab);
 
         const kolicina=document.createElement("input");
         kolicina.type="number";
         id="kolicinaPica" + this.oznaka + "-" + this.brojStola;
         kolicina.classList.add(id);
-        kolicinaLab.appendChild(kolicina);
+        divKol.appendChild(kolicina);
 
         
 
@@ -241,7 +245,7 @@ export class Sto{
                     
                      btnP.setAttribute('disabled', true);
                      btnP.parentNode.parentNode.style.backgroundColor = "rgb(140, 194, 255)";
-                        console.log(p);});
+                        });
                     
                    
                 }
@@ -277,7 +281,7 @@ export class Sto{
                                 else{
                                 kolicina=naruceno.kolicinaPiva;
                                 }
-                                console.log(kolicina);
+                                
                                // kolicina=VratiKolicinu(naruceno);
                                 
                             }
@@ -285,7 +289,7 @@ export class Sto{
 
                         //for(let i = 0; i < kolicina; i++)
                             this.pica.push(new Pice(temp.naziv, temp.cena, temp.id,temp.pivoHrana,kolicina));
-                            console.log("Pice na stolu: " + temp.naziv);
+                            
                             racun.innerHTML += temp.naziv + " - " + temp.cena + " x "+ kolicina + "<br>";
                         
                         let b = document.querySelector(".btnPlati" + this.oznaka + "-" + this.brojStola);
